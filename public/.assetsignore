@@ -1,0 +1,10 @@
+# Wird von Astro nach dist/ kopiert und von Cloudflare Workers Static Assets
+# gelesen: hier gelistete Dateien werden nicht als statische Datei ausgeliefert.
+#
+# Fuer den aktuellen rein statischen Build ist die Datei wirkungslos — es gibt
+# weder _worker.js noch _routes.json. Sie muss aber vorhanden sein: die
+# Astro-Einrichtung von Cloudflare (`astro add cloudflare`) bricht sonst mit
+# "Missing file or directory: public/.assetsignore" ab. Und falls spaeter doch
+# ein SSR-Adapter dazukommt, greifen die Eintraege sofort richtig.
+_worker.js
+_routes.json

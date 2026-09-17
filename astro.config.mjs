@@ -14,7 +14,7 @@ const isDraft = process.env.PUBLIC_DRAFT === '1';
 // SITE_URL ueberschreibbar: SITE_URL=https://… npm run deploy:draft
 const site =
   process.env.SITE_URL ??
-  (isDraft ? 'https://web-ibro-entwurf.workers.dev' : 'https://www.ibro.de');
+  (isDraft ? 'https://ibro-entwurf.workers.dev' : 'https://www.ibro.de');
 
 export default defineConfig({
   site,

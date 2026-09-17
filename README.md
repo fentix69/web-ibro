@@ -68,18 +68,40 @@ npm run cf:preview    # Entwurfs-Build im echten Worker-Runtime ansehen
 Cloudflare Workers, als reiner Static-Assets-Worker (`wrangler.jsonc`) —
 die Seite ist vollständig statisch, es läuft kein Worker-Skript.
 
+### Variante A — direkt von der Hand aus
+
 ```bash
 npx wrangler login
 npm run deploy:draft
 ```
 
-Das veröffentlicht den Entwurf unter
-`https://web-ibro-entwurf.<subdomain>.workers.dev`. Weicht die Adresse ab,
+### Variante B — Workers Builds (Git-Anbindung)
+
+Im Cloudflare-Dashboard unter *Einstellungen → Build* **beide Kommandos
+ausdrücklich setzen**:
+
+| Feld | Wert |
+| --- | --- |
+| Build command | `npm run build:draft` |
+| Deploy command | `npx wrangler deploy` |
+
+Wichtig: Lässt man die Felder auf der Voreinstellung, die Cloudflare beim
+Verbinden des Repos erkennt, läuft im Build ungefragt `astro add cloudflare`.
+Das zieht den SSR-Adapter `@astrojs/cloudflare` nach, den diese Seite nicht
+braucht — und dessen aktuelle Fassung (14.x) ohnehin Astro 7 verlangt, während
+das Projekt auf Astro 5 läuft. Genau daran ist der erste Build gescheitert.
+
+Der Name in `wrangler.jsonc` muss mit dem Worker im Dashboard
+übereinstimmen (derzeit `ibro-entwurf`), sonst landet das Deploy in einem
+zweiten, leeren Worker.
+
+Beides veröffentlicht den Entwurf unter
+`https://ibro-entwurf.<subdomain>.workers.dev`. Weicht die Adresse ab,
 den Build einmal mit der echten Adresse bauen, damit Canonical und Sitemap
 stimmen:
 
 ```bash
-SITE_URL=https://web-ibro-entwurf.<subdomain>.workers.dev npm run deploy:draft
+SITE_URL=https://ibro-entwurf.<subdomain>.workers.dev npm run deploy:draft
 ```
 
 Der Entwurf ist bewusst auf `noindex` gesetzt und die `robots.txt` sperrt
@@ -118,6 +140,7 @@ src/
   styles/global.css
 public/
   favicon.svg
+  .assetsignore     # von Workers Static Assets gelesen; s. Datei-Kommentar
 wrangler.jsonc      # Cloudflare-Workers-Deploy (Static Assets)
 ```
 

@@ -123,6 +123,14 @@ npm run deploy:draft # Entwurf auf workers.dev veröffentlichen
   `defineConfig({...})` stehen, sonst bricht der Build
 - Solange die Seite statisch bleibt, **keinen** `@astrojs/cloudflare`-Adapter
   einbauen — der wird erst gebraucht, wenn es SSR-Routen gibt (z. B. ein
-  serverseitig verarbeitetes Formular)
+  serverseitig verarbeitetes Formular). Falls doch einmal noetig: Version
+  **12.x** nehmen (14.x verlangt Astro 7, das Projekt laeuft auf Astro 5)
+- Bei Workers Builds muessen Build- und Deploy-Kommando im Dashboard
+  ausdruecklich gesetzt sein (`npm run build:draft` / `npx wrangler deploy`),
+  sonst fuehrt Cloudflare beim Build ungefragt `astro add cloudflare` aus und
+  zieht den Adapter nach
+- `public/.assetsignore` nicht loeschen — ohne die Datei bricht die
+  Astro-Einrichtung von Cloudflare ab
+- Der `name` in `wrangler.jsonc` muss dem Worker im Dashboard entsprechen
 - Kein eigenständiges `git commit` oder `git push` ohne ausdrückliche
   Freigabe
