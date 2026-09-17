@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // Entwurf: laeuft vorerst nur auf der workers.dev-Testadresse.
+  // Der Name muss mit dem Worker im Cloudflare-Dashboard uebereinstimmen,
+  // sonst deployt wrangler in einen zweiten, leeren Worker.
+  // Vor Livegang (erst wenn ein Auftrag vorliegt): Namen auf "web-ibro"
+  // aendern und die echte Domain als Custom Domain / Route ergaenzen.
+  "name": "ibro-entwurf",
+  "compatibility_date": "2026-09-01",
+
+  // Reiner Static-Assets-Worker: die Seite ist vollstaendig statisch
+  // (Astro output "static"), deshalb kein "main"-Skript noetig.
+  "assets": {
+    "directory": "./dist"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}

@@ -36,7 +36,10 @@ Bewerber (Karriere).
 - Astro 5, TypeScript strict
 - Tailwind CSS v4 (`@tailwindcss/vite`)
 - Schriften selbst gehostet über `@fontsource` (Space Grotesk, Public Sans) — kein CDN
-- Hosting: Cloudflare Workers (sobald Auftrag vorliegt)
+- Hosting: Cloudflare Workers als reiner Static-Assets-Worker
+  (`wrangler.jsonc`, kein Worker-Skript, kein SSR-Adapter — die Seite ist
+  vollständig statisch). Entwurf läuft auf `workers.dev`; echte Domain
+  erst nach Auftrag.
 - Formulare: noch keine — Kontakt aktuell nur per Telefon (`tel:`-Link).
   Sobald ein Formular gewünscht ist: Formsubmit, anonymisierte Kennung,
   Empfänger die Adresse der jeweils zuständigen Gesellschaft.
@@ -76,11 +79,16 @@ eigene Referenzen-/Karriere-Seite) später ergänzen.
 - `src/components/Division.astro` — wiederverwendbar für alle vier Firmen
   (Props: `id`, `bg`, `reverse`, `kicker`, `name`, `lead`, `extra`, `groups`)
 - `src/components/Kontakt.astro` — Adresse, Telefon, Footer
+- `src/pages/robots.txt.ts` — erzeugt die `robots.txt`; im Entwurfs-Build
+  Sperre, im Produktions-Build Freigabe plus Sitemap-Verweis
 
 ## SEO-Vorgaben
 
 - `site` in `astro.config.mjs` ist ein **Platzhalter** (`ibro.de`) — echte
   Domain gehört dem Kunden und muss vor Livegang bestätigt werden
+- Der Entwurfs-Build (`PUBLIC_DRAFT=1`) setzt `noindex` und sperrt die
+  `robots.txt`, damit die Testadresse nicht neben der echten Seite
+  indexiert wird. Beim Livegang fällt das über `npm run build` weg
 - JSON-LD `ProfessionalService` mit Adresse aus dem Kontakt-Seiteninhalt
   der bestehenden Seite
 - OG-Bild fehlt noch (Platzhalter-Kommentar in `BaseLayout.astro`)
@@ -97,9 +105,12 @@ anderen Empfänger haben).
 
 ```bash
 npm install
-npm run dev       # Dev-Server, http://localhost:4321
-npm run build     # Produktions-Build nach dist/
-npm run preview   # Build lokal ansehen
+npm run dev          # Dev-Server, http://localhost:4321
+npm run build        # Produktions-Build nach dist/ (echte Domain, indexierbar)
+npm run build:draft  # Entwurfs-Build (Testadresse, noindex)
+npm run preview      # Build lokal ansehen
+npm run cf:preview   # Entwurfs-Build im Worker-Runtime ansehen (wrangler dev)
+npm run deploy:draft # Entwurf auf workers.dev veröffentlichen
 ```
 
 ## Wichtige Regeln für zukünftige Änderungen
@@ -110,5 +121,16 @@ npm run preview   # Build lokal ansehen
 - Schriften bleiben selbst gehostet (`@fontsource`) — kein Google-Fonts-CDN
 - `server`-Zeile in `astro.config.mjs` muss **innerhalb** von
   `defineConfig({...})` stehen, sonst bricht der Build
+- Solange die Seite statisch bleibt, **keinen** `@astrojs/cloudflare`-Adapter
+  einbauen — der wird erst gebraucht, wenn es SSR-Routen gibt (z. B. ein
+  serverseitig verarbeitetes Formular). Falls doch einmal noetig: Version
+  **12.x** nehmen (14.x verlangt Astro 7, das Projekt laeuft auf Astro 5)
+- Bei Workers Builds muessen Build- und Deploy-Kommando im Dashboard
+  ausdruecklich gesetzt sein (`npm run build:draft` / `npx wrangler deploy`),
+  sonst fuehrt Cloudflare beim Build ungefragt `astro add cloudflare` aus und
+  zieht den Adapter nach
+- `public/.assetsignore` nicht loeschen — ohne die Datei bricht die
+  Astro-Einrichtung von Cloudflare ab
+- Der `name` in `wrangler.jsonc` muss dem Worker im Dashboard entsprechen
 - Kein eigenständiges `git commit` oder `git push` ohne ausdrückliche
   Freigabe
