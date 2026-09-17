@@ -21,6 +21,8 @@ vier lose verlinkte Unterbereiche.
 - Eine Seite, vier Firmenabschnitte, echte Inhalte der bestehenden Seite
 - Anker-Navigation über eine schwebende Pill-Nav mit Mobilmenü
 - Glaskarte im Hero mit den vier Gesellschaften als Einstieg
+- Firmenblau der IBRo-Gruppe als Struktur-, Amber als Handlungsfarbe
+- Standortfoto im Kontaktbereich, über `astro:assets` nach WebP optimiert
 - Leistungen in Glaskarten statt loser Listen
 - Respektiert `prefers-reduced-motion`, `prefers-reduced-transparency`
   und `prefers-contrast`
@@ -129,6 +131,7 @@ und offene Fragen dazu in `CLAUDE.md` unter „Formularlogik".
 
 ```
 src/
+  assets/standort-roggentin.jpg
   layouts/BaseLayout.astro
   components/
     Nav.astro

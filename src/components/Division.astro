@@ -47,10 +47,10 @@ const einzeln = groups.length === 1;
       </div>
 
       <p class="t-eyebrow mb-5 flex items-start gap-3 text-[var(--color-ink-faint)]" data-reveal-item>
-        <span class="t-numeral shrink-0 text-[0.8125rem] font-semibold text-[var(--color-brand)]">
+        <span class="t-numeral shrink-0 text-[0.8125rem] font-semibold text-[var(--color-blue)]">
           {index}
         </span>
-        <span class="mt-[0.42em] inline-block h-px w-8 shrink-0 bg-[var(--color-brand-bright)]" aria-hidden="true"></span>
+        <span class="mt-[0.42em] inline-block h-px w-8 shrink-0 bg-[var(--color-blue)]" aria-hidden="true"></span>
         <slot name="sparte" />
       </p>
 
@@ -83,7 +83,7 @@ const einzeln = groups.length === 1;
             {group.title && (
               <h3 class="t-h3 mb-5 flex items-start gap-3">
                 <span
-                  class="mt-[0.55em] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-brand-bright)]"
+                  class="mt-[0.55em] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-blue)]"
                   aria-hidden="true"
                 />
                 <span class="min-w-0">{group.title}</span>

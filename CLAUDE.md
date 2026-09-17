@@ -52,8 +52,17 @@ mit eigener Akzentfarbe für dieses Projekt.
 
 - Flächen neutral nach Apple-Art: Weiß `#FFFFFF` / `#F5F5F7` im Wechsel
   zwischen den Abschnitten. Das frühere warme Papierweiß ist entfallen
-- Dunkle Fläche bleibt das IBRo-Navy `#16202B` (Kontakt) — daran hängt der
-  Wiedererkennungswert gegenüber den übrigen DzB-Projekten
+- **Firmenblau der IBRo-Gruppe** `#1F4287` (aus der Vorlage des Kunden
+  abgelesen, nicht aus einer Datei ausgelesen — bei Gelegenheit gegen den
+  exakten Wert aus dem Logo prüfen). Als Text 9,60:1 auf Weiß
+- Dunkle Fläche ist das **vertiefte** Firmenblau `#16305F`, nicht das reine:
+  auf `#1F4287` käme das helle Amber nur auf 3,89:1, auf `#16305F` auf
+  5,25:1 — daran hängt die Lesbarkeit der Knopfbeschriftung
+- **Aufgabenteilung der beiden Akzente**, damit sie sich nicht streiten:
+  Blau trägt Identität und Struktur (dunkle Fläche, Atmosphäre,
+  Eyebrow-Striche, Nummerierung, Eckdaten, Wortmarke, Hover, Fokus).
+  Amber ist allein die Handlungsfarbe (Knöpfe, Haken in den Listen) und
+  wirkt dadurch stärker, weil es selten vorkommt
 - Tinte `#1D1D1F`, gedämpft `#56565A`, zurückgenommen `#6E6E73`,
   Haarlinie `#D9D9DE`
 - Akzent Messing-Amber, **zwei Werte mit klarer Aufgabenteilung**:
@@ -102,9 +111,22 @@ eigene Referenzen-/Karriere-Seite) später ergänzen.
   (Props: `id`, `bg` (`surface` | `muted`), `index`, `kicker`, `name`,
   `lead`, `extra`, `groups`; Slots: `icon`, `sparte`). Die Leistungen
   stehen in Glaskarten, eine je Gruppe
-- `src/components/Kontakt.astro` — Adresse, Telefon, Footer
+- `src/components/Kontakt.astro` — Standortfoto, Adresse, Telefon, Footer
 - `src/pages/robots.txt.ts` — erzeugt die `robots.txt`; im Entwurfs-Build
   Sperre, im Produktions-Build Freigabe plus Sitemap-Verweis
+
+## Bildmaterial
+
+- `src/assets/standort-roggentin.jpg` — Firmengebäude am Kastanienweg,
+  813 × 425 px. Liegt bewusst in `src/assets/` und nicht in `public/`:
+  nur von dort optimiert Astro automatisch nach WebP und erzeugt die
+  Größenvarianten (155 kB → 63 kB bzw. 17 kB)
+- Astro skaliert **nicht** über die Quellbreite hinaus. Das Foto steht
+  deshalb in einer Spalte und nicht über die volle Breite — sonst würde es
+  auf großen Schirmen weichgezogen. Eine höher aufgelöste Fassung wäre der
+  nächste Schritt
+- Weitere Bilder ebenfalls nach `src/assets/` legen, mit sprechendem
+  Dateinamen, und über `<Image>` aus `astro:assets` einbinden
 
 ## SEO-Vorgaben
 

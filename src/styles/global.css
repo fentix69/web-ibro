@@ -21,10 +21,10 @@
   /* Flaechen */
   --color-surface: #ffffff;
   --color-surface-muted: #f5f5f7;
-  /* Dunkle Flaeche bleibt das IBRo-Navy statt eines neutralen Schwarz —
-     daran haengt der Wiedererkennungswert der Seite. */
-  --color-surface-deep: #16202b;
-  --color-surface-deep-soft: #1e2c38;
+  /* Dunkle Flaeche ist das vertiefte Firmenblau, nicht ein neutrales
+     Schwarz — siehe Aufgabenteilung beim Blau unten. */
+  --color-surface-deep: #16305f;
+  --color-surface-deep-soft: #1d3d72;
 
   /* Text */
   --color-ink: #1d1d1f;
@@ -43,6 +43,25 @@
   --color-brand-strong: #7d5610;
   --color-brand-bright: #d69a2d;
   --color-brand-soft: #fbf4e6;
+
+  /* Firmenblau der IBRo-Gruppe.
+     --color-blue       #1f4287  9,60:1 auf Weiss, 8,82:1 auf #f5f5f7 —
+                                 traegt als Text ueberall
+     --color-blue-deep  #16305f  die dunkle Flaeche. Bewusst tiefer als das
+                                 reine Firmenblau: auf #1f4287 kaeme das
+                                 helle Amber nur auf 3,89:1, auf #16305f
+                                 auf 5,25:1. Daran haengt die Lesbarkeit der
+                                 Knopfbeschriftung (Blau auf Amber)
+     --color-blue-soft  #eef2fa  zarte Tonflaeche
+
+     Aufgabenteilung der beiden Akzente, damit sie sich nicht streiten:
+     Blau traegt Identitaet und Struktur (dunkle Flaeche, Atmosphaere,
+     Eyebrow-Striche, Nummerierung, Hover, Fokus). Amber ist allein die
+     Handlungsfarbe (Knoepfe, Haken in den Listen) und wirkt dadurch
+     staerker, weil es selten vorkommt. */
+  --color-blue: #1f4287;
+  --color-blue-deep: #16305f;
+  --color-blue-soft: #eef2fa;
 
   /* Bewegung. Nichts hier ist gestisch, deshalb reichen Kurven —
      Federn braeuchte erst, was ein Finger direkt anfasst. */
@@ -71,7 +90,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-brand);
+    outline: 2px solid var(--color-blue);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -81,7 +100,7 @@
   }
 
   ::selection {
-    background-color: var(--color-brand);
+    background-color: var(--color-blue);
     color: #ffffff;
   }
 

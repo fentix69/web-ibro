@@ -1,6 +1,8 @@
 ---
+import { Image } from "astro:assets";
 import Container from "./Container.astro";
 import SectionHeading from "./SectionHeading.astro";
+import standort from "../assets/standort-roggentin.jpg";
 ---
 
 <section
@@ -10,18 +12,38 @@ import SectionHeading from "./SectionHeading.astro";
   <div class="kontakt-grund" aria-hidden="true"></div>
 
   <Container class="relative z-10">
-    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16">
-      <SectionHeading
-        onDark
-        eyebrow="Standort"
-        title="Am Stadtrand von Rostock zu Hause."
-        lead="Alle vier Unternehmen der IBRo Firmengruppe sind an einem Standort in Roggentin erreichbar — kurze Wege zwischen Funktechnik, Communication-Center und Logistikzentrum eingeschlossen."
-      />
+    <SectionHeading
+      onDark
+      eyebrow="Standort"
+      title="Am Stadtrand von Rostock zu Hause."
+      lead="Alle vier Unternehmen der IBRo Firmengruppe sind an einem Standort in Roggentin erreichbar — kurze Wege zwischen Funktechnik, Communication-Center und Logistikzentrum eingeschlossen."
+    />
+
+    {/* Foto und Karte stehen nebeneinander und beginnen auf derselben
+        Hoehe. Stuende die Ueberschrift in der linken Spalte, bliebe neben
+        dem Foto eine grosse leere Flaeche. */}
+    <div class="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:gap-10">
+      <div>
+        {/* Die Originaldatei ist 813 px breit. Astro skaliert nicht ueber die
+            Quellbreite hinaus, deshalb bleibt der Rahmen darunter — sonst
+            wuerde das Bild auf grossen Schirmen weichgezogen. */}
+        <figure class="foto overflow-hidden rounded-3xl">
+          <Image
+            src={standort}
+            alt="Das Firmengebäude der IBRo Firmengruppe am Kastanienweg in Roggentin: ein langgestreckter weißer Bau mit dunklem Satteldach, davor eine alte Eiche und eine Rasenfläche."
+            widths={[406, 813]}
+            sizes="(min-width: 64rem) 42rem, 100vw"
+            loading="lazy"
+            decoding="async"
+            class="block h-auto w-full"
+          />
+        </figure>
+      </div>
 
       {/* Ohne `data-reveal-item`: die Karte lebt von `backdrop-filter`,
           und eine Deckkraft zwischen 0 und 1 am Vorfahren wuerde den Blur
           auf die eigene Ebene beschraenken. */}
-      <div class="glass-dark glass-thick rounded-3xl p-7 sm:p-8">
+      <div class="glass-dark glass-thick self-stretch rounded-3xl p-7 sm:p-8">
         <p class="t-h3 text-white">IBRo Funk und Marketing GmbH</p>
 
         <address class="mt-5 space-y-4 text-[0.9375rem] leading-[1.7] text-white/70 not-italic">
@@ -65,13 +87,21 @@ import SectionHeading from "./SectionHeading.astro";
     background:
       radial-gradient(
         40rem 26rem at 82% 12%,
-        color-mix(in srgb, var(--color-brand-bright) 16%, transparent),
+        color-mix(in srgb, var(--color-brand-bright) 14%, transparent),
         transparent 68%
       ),
       radial-gradient(
         34rem 28rem at 6% 88%,
-        color-mix(in srgb, #5d8cb0 14%, transparent),
+        color-mix(in srgb, #ffffff 10%, transparent),
         transparent 70%
       );
+  }
+
+  /* Heller Rand wie an den Glasflaechen, damit das Foto zum selben
+     Materialsystem gehoert und nicht als Fremdkoerper auf der Flaeche
+     liegt. */
+  .foto {
+    border: 1px solid color-mix(in srgb, #ffffff 14%, transparent);
+    box-shadow: 0 24px 60px -28px rgb(0 0 0 / 0.55);
   }
 </style>
