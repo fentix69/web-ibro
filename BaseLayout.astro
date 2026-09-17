@@ -1,0 +1,50 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <!-- TODO: OG-Bild 1200x630 (PNG) ergaenzen, sobald Bildmaterial vorliegt -->
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "IBRo Funk und Marketing GmbH",
+      "url": "https://www.ibro.de",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Kastanienweg 1",
+        "postalCode": "18184",
+        "addressLocality": "Roggentin",
+        "addressCountry": "DE"
+      },
+      "telephone": "+49 38204 660",
+      "areaServed": "Mecklenburg-Vorpommern"
+    })} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

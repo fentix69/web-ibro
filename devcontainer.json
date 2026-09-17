@@ -1,0 +1,14 @@
+{
+  "name": "web-ibro",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+  "forwardPorts": [4321],
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": ["astro-build.astro-vscode", "bradlc.vscode-tailwindcss"]
+    }
+  }
+}

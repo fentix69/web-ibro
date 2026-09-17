@@ -1,0 +1,189 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Verbund from "../components/Verbund.astro";
+import Division from "../components/Division.astro";
+import Kontakt from "../components/Kontakt.astro";
+---
+
+<BaseLayout
+  title="IBRo Firmengruppe — Kommunikation, Kundenkontakt und Logistik aus Roggentin"
+  description="Die IBRo Firmengruppe vereint seit 1990 Kommunikationstechnik, Communication-Center-Leistungen und Logistik-Fulfillment unter einem Dach in Mecklenburg-Vorpommern."
+>
+  <Nav />
+  <Hero />
+  <Verbund />
+
+  <Division
+    id="holding"
+    bg="paper"
+    kicker="Die Verwaltungsgesellschaft trägt die Firmengruppe seit 1990."
+    name="IBRo Funk und Marketing GmbH"
+    lead="Prozesskompetenz ist unsere Stärke. Unser Qualitätsmanagement wird gelebt — von der Geschäftsführung bis zu den Mitarbeitern in allen unseren Unternehmen. Wir setzen Ihre Qualitätsstandards für Sie um."
+    groups={[
+      {
+        title: "Verwaltungsdienstleistungen für die Tochtergesellschaften",
+        items: [
+          "Qualitätsmanagement",
+          "Datenschutz und Informationssicherheit",
+          "IT-Dienstleistungen",
+          "Personalwesen",
+          "Buchhaltung und Controlling",
+          "Facilitymanagement",
+          "Brand- und Umweltschutz",
+          "Arbeits- und Gesundheitsschutz",
+          "Räumliche und technische Ressourcen",
+        ],
+      },
+    ]}
+  >
+    <Fragment slot="icon">
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+        <circle cx="28" cy="28" r="9" stroke="currentColor" stroke-width="1.6"></circle>
+        <g stroke="currentColor" stroke-width="1.6">
+          <line x1="28" y1="4" x2="28" y2="13"></line>
+          <line x1="28" y1="43" x2="28" y2="52"></line>
+          <line x1="4" y1="28" x2="13" y2="28"></line>
+          <line x1="43" y1="28" x2="52" y2="28"></line>
+          <line x1="11.5" y1="11.5" x2="17.8" y2="17.8"></line>
+          <line x1="38.2" y1="38.2" x2="44.5" y2="44.5"></line>
+          <line x1="44.5" y1="11.5" x2="38.2" y2="17.8"></line>
+          <line x1="17.8" y1="38.2" x2="11.5" y2="44.5"></line>
+        </g>
+      </svg>
+    </Fragment>
+  </Division>
+
+  <Division
+    id="funk"
+    bg="tint"
+    reverse
+    kicker="Tochtergesellschaft seit 2006, hervorgegangen aus dem Geschäftsbereich Funk von 1991."
+    name="IBRo Funk GmbH"
+    lead="Ihr regionaler Fachhändler für stationäre und mobile Kommunikationstechnik in Mecklenburg-Vorpommern — von der Planung über Vertrieb und Montage bis zur Reparatur."
+    extra="Geblieben sind wir die Gleichen: Ihr Kommunikationsspezialist, seit 1991."
+    groups={[
+      {
+        title: "Leistungen",
+        items: [
+          "Beratung und Planung",
+          "Verkauf, Montage und Einweisung",
+          "Einbau in alle Fahrzeugtypen — Landmaschinen, LKW, Spezialmaschinen",
+          "Reparatur und Optimierung bestehender Funktechnik, inklusive Programmierung",
+          "Telefonanlagen des Herstellers Auerswald, als autorisierter Advanced Partner",
+        ],
+      },
+    ]}
+  >
+    <Fragment slot="icon">
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+        <line x1="28" y1="52" x2="28" y2="20" stroke="currentColor" stroke-width="1.6"></line>
+        <path d="M17 30 Q28 16 39 30" stroke="currentColor" stroke-width="1.6" fill="none"></path>
+        <path d="M11 36 Q28 12 45 36" stroke="currentColor" stroke-width="1.6" fill="none"></path>
+        <circle cx="28" cy="16" r="3.2" fill="currentColor"></circle>
+      </svg>
+    </Fragment>
+  </Division>
+
+  <Division
+    id="service"
+    bg="paper"
+    kicker="Tochtergesellschaft seit 2006, hervorgegangen aus dem Geschäftsbereich Telefonmarketing von 1991."
+    name="IBRo Service GmbH"
+    lead="Ihr Draht zum Kunden: Communication-Center-Leistungen in allen Dialogdisziplinen, über Telefon, Fax, Mailing, Internet, E-Mail und soziale Netzwerke."
+    extra="Qualität und Quantität, Datenschutz und Informationssicherheit sind für uns täglich gelebte Praxis."
+    groups={[
+      {
+        title: "Inbound",
+        items: [
+          "Bürger- und Informationshotline",
+          "Produktberatung und telefonische Bestellaufnahme",
+          "Telefonische Sachbearbeitung",
+          "Responsemarketing für Print, TV und Werbeaktionen",
+          "Reklamationshotline und Beschwerdemanagement",
+        ],
+      },
+      {
+        title: "Outbound",
+        items: [
+          "Marktforschung und Kundenbefragungen",
+          "Vertriebsvorbereitung und -unterstützung",
+          "Messevor- und -nachbereitung",
+          "Adresserfassung und -qualifizierung",
+        ],
+      },
+      {
+        title: "Rundum-Service",
+        items: [
+          "Problemorientierte Lösungsvorschläge",
+          "Erarbeitung firmeninterner Unterlagen",
+          "Entwicklung von Telefonmarketingstrategien",
+          "Telefontraining und Kommunikationsausbildung",
+          "Qualitätssicherung durch Coaching und Monitoring",
+        ],
+      },
+    ]}
+  >
+    <Fragment slot="icon">
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+        <path d="M14 28a14 14 0 0 1 28 0v10a4 4 0 0 1-4 4h-3v-12h7" stroke="currentColor" stroke-width="1.6" fill="none"></path>
+        <path d="M14 28v10a4 4 0 0 0 4 4h3v-12h-7" stroke="currentColor" stroke-width="1.6" fill="none"></path>
+      </svg>
+    </Fragment>
+  </Division>
+
+  <Division
+    id="versand"
+    bg="tint"
+    reverse
+    kicker="Seit über 30 Jahren Logistik- und Fulfillment-Dienstleister mit eigenem Logistikzentrum."
+    name="IBRo Versandservice GmbH"
+    lead="In gepflegten Hochregallagern lagert Ihre Ware trocken, sauber und lichtgeschützt. Wir übernehmen Bestell-, Reklamations- und Retourenbearbeitung und lösen auf Wunsch Zahlungsüberwachung und Inkassoverfahren aus."
+    extra="Auf Wunsch mit eigenem Online-Tool für tagesaktuelle Warenbewegungen und -bestände — als Komplettlösung oder Teilleistung."
+    groups={[
+      {
+        title: "Leistungen im Überblick",
+        items: [
+          "Beratung und Planung, inklusive Webshop-Lösungen",
+          "Bestellannahme — klassisch oder per Schnittstelle",
+          "Kundenbetreuung, Rechnungsstellung, Retourenmanagement",
+          "Druck von Mailings und Rechnungen",
+          "Kommissionierung und Konfektionierung",
+          "Frankierung, Speditions- und Terminversand",
+          "Lagerhaltung und -verwaltung",
+          "Datenschutzkonforme Entsorgung",
+          "Qualitätssicherung nach DIN&nbsp;EN&nbsp;ISO&nbsp;9001-2015",
+        ],
+      },
+    ]}
+  >
+    <Fragment slot="icon">
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+        <rect x="6" y="30" width="18" height="18" stroke="currentColor" stroke-width="1.6"></rect>
+        <rect x="26" y="30" width="18" height="18" stroke="currentColor" stroke-width="1.6"></rect>
+        <rect x="16" y="10" width="18" height="18" stroke="currentColor" stroke-width="1.6"></rect>
+      </svg>
+    </Fragment>
+  </Division>
+
+  <Kontakt />
+</BaseLayout>
+
+<script>
+  // Apple-Design: ein einziger orchestrierter Reveal je Sektion, respektiert prefers-reduced-motion
+  // ueber die CSS-Regel in global.css; hier nur das Ein-/Ausblenden beim Scrollen.
+  const sections = document.querySelectorAll<HTMLElement>(".reveal");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    { threshold: 0.15 }
+  );
+  sections.forEach((section) => observer.observe(section));
+</script>
