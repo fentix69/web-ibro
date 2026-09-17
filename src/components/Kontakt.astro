@@ -1,43 +1,77 @@
-<section id="standort" class="reveal px-6 pb-16 pt-24" style="background: var(--navy);">
-  <div class="mx-auto grid max-w-[1160px] gap-14 md:grid-cols-2">
-    <div>
-      <h2 class="display mb-5 text-[28px] md:text-[34px]" style="color: var(--paper-on-navy);">
-        Am Stadtrand von Rostock zu Hause.
-      </h2>
-      <p class="body-copy max-w-[460px] text-[17px]" style="color: var(--muted-on-navy);">
-        Alle vier Unternehmen der IBRo Firmengruppe sind an einem Standort in Roggentin
-        erreichbar &mdash; kurze Wege zwischen Funktechnik, Communication-Center und
-        Logistikzentrum eingeschlossen.
-      </p>
+---
+import Container from "./Container.astro";
+import SectionHeading from "./SectionHeading.astro";
+---
+
+<section
+  id="standort"
+  class="relative isolate scroll-mt-28 overflow-hidden bg-[var(--color-surface-deep)] py-20 sm:py-28"
+>
+  <div class="kontakt-grund" aria-hidden="true"></div>
+
+  <Container class="relative z-10">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16">
+      <SectionHeading
+        onDark
+        eyebrow="Standort"
+        title="Am Stadtrand von Rostock zu Hause."
+        lead="Alle vier Unternehmen der IBRo Firmengruppe sind an einem Standort in Roggentin erreichbar — kurze Wege zwischen Funktechnik, Communication-Center und Logistikzentrum eingeschlossen."
+      />
+
+      {/* Ohne `data-reveal-item`: die Karte lebt von `backdrop-filter`,
+          und eine Deckkraft zwischen 0 und 1 am Vorfahren wuerde den Blur
+          auf die eigene Ebene beschraenken. */}
+      <div class="glass-dark glass-thick rounded-3xl p-7 sm:p-8">
+        <p class="t-h3 text-white">IBRo Funk und Marketing GmbH</p>
+
+        <address class="mt-5 space-y-4 text-[0.9375rem] leading-[1.7] text-white/70 not-italic">
+          <span class="block">
+            Kastanienweg 1<br />
+            18184 Roggentin
+          </span>
+
+          <span class="block">
+            Telefon: 038204&nbsp;660<br />
+            Fax: 038204&nbsp;66999
+          </span>
+        </address>
+
+        <a
+          href="tel:+4938204660"
+          class="shadow-brand mt-7 inline-flex items-center gap-2 rounded-full bg-[var(--color-brand-bright)] px-6 py-3 text-[0.9375rem] font-semibold text-[var(--color-surface-deep)]"
+          data-press
+        >
+          Jetzt anrufen
+        </a>
+      </div>
     </div>
 
-    <div class="border-t pt-7" style="border-color: var(--navy-line);">
-      <p class="display mb-3.5 text-[19px]" style="color: var(--paper-on-navy);">
-        IBRo Funk und Marketing GmbH
-      </p>
-      <p class="mb-5 text-[16px] leading-[1.8]" style="color: var(--muted-on-navy);">
-        Kastanienweg 1<br />
-        18184 Roggentin
-      </p>
-      <p class="mb-6 text-[16px] leading-[1.8]" style="color: var(--muted-on-navy);">
-        Telefon: 038204&nbsp;660<br />
-        Fax: 038204&nbsp;66999
-      </p>
-      <a
-        href="tel:+4938204660"
-        class="press inline-block rounded-full px-6 py-3 text-[15px] font-semibold"
-        style="background: var(--accent); color: var(--navy);"
-      >
-        Anrufen
-      </a>
+    <div class="mt-16 border-t border-white/10 pt-6">
+      <div class="flex flex-wrap justify-between gap-3">
+        <p class="text-[0.8125rem] text-white/45">
+          &copy; 2026 IBRo Funk und Marketing GmbH
+        </p>
+        <p class="text-[0.8125rem] text-white/45">Gestaltungsentwurf: DzB Consulting</p>
+      </div>
     </div>
-  </div>
-
-  <div
-    class="mx-auto mt-16 flex max-w-[1160px] flex-wrap justify-between gap-3 border-t pt-6"
-    style="border-color: var(--navy-line);"
-  >
-    <p class="text-[13px]" style="color: var(--faint-on-navy);">&copy; 2026 IBRo Funk und Marketing GmbH</p>
-    <p class="text-[13px]" style="color: var(--faint-on-navy);">Gestaltungsentwurf: DzB Consulting</p>
-  </div>
+  </Container>
 </section>
+
+<style>
+  .kontakt-grund {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(
+        40rem 26rem at 82% 12%,
+        color-mix(in srgb, var(--color-brand-bright) 16%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        34rem 28rem at 6% 88%,
+        color-mix(in srgb, #5d8cb0 14%, transparent),
+        transparent 70%
+      );
+  }
+</style>

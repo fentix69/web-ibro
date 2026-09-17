@@ -1,0 +1,47 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  class?: string;
+  onDark?: boolean;
+}
+
+const { eyebrow, title, lead, class: className = "", onDark = false } = Astro.props;
+---
+
+<div class:list={["max-w-2xl", className]}>
+  {
+    eyebrow && (
+      <p
+        class:list={[
+          "t-eyebrow mb-5 flex items-start gap-3",
+          onDark ? "text-white/55" : "text-[var(--color-ink-faint)]",
+        ]}
+        data-reveal-item
+      >
+        <span
+          class="mt-[0.42em] inline-block h-px w-8 shrink-0 bg-[var(--color-brand-bright)]"
+          aria-hidden="true"
+        />
+        {eyebrow}
+      </p>
+    )
+  }
+
+  {/* Keine automatische Trennung: das deutsche Woerterbuch zerlegt
+      Komposita an Stellen, die wie ein Fehler aussehen
+      („Kommunikations-technik"). Lange Woerter ruecken lieber in die
+      naechste Zeile; break-words bleibt der Notnagel. */}
+  <h2 class:list={["t-h2 break-words", onDark && "text-white"]} data-reveal-item>
+    {title}
+  </h2>
+
+  {
+    lead && (
+      <p class:list={["t-lead mt-5", onDark && "text-white/70"]} data-reveal-item>
+        {lead}
+      </p>
+    )
+  }
+</div>

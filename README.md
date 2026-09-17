@@ -19,9 +19,11 @@ vier lose verlinkte Unterbereiche.
 ## Wichtigste Funktionen
 
 - Eine Seite, vier Firmenabschnitte, echte Inhalte der bestehenden Seite
-- Anker-Navigation über eine schwebende Pill-Nav
-- Knoten-Diagramm im Hero als Leitmotiv des Firmenverbunds
-- Scroll-Reveal respektiert `prefers-reduced-motion`
+- Anker-Navigation über eine schwebende Pill-Nav mit Mobilmenü
+- Glaskarte im Hero mit den vier Gesellschaften als Einstieg
+- Leistungen in Glaskarten statt loser Listen
+- Respektiert `prefers-reduced-motion`, `prefers-reduced-transparency`
+  und `prefers-contrast`
 
 ## Seitenübersicht
 
@@ -134,6 +136,10 @@ src/
     Verbund.astro
     Division.astro
     Kontakt.astro
+  components/
+    Container.astro
+    SectionHeading.astro
+    FactStrip.astro
   pages/
     index.astro
     robots.txt.ts   # draft-abhaengig: Freigabe oder Sperre

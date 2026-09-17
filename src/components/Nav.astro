@@ -1,20 +1,166 @@
-<div class="sticky top-0 z-20 flex justify-center pt-4 px-5">
-  <nav
-    class="glass-nav flex items-center gap-6 rounded-full px-6 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
-  >
-    <span class="mr-1 text-[16px] font-semibold" style="font-family: var(--font-display); color: var(--paper-on-navy);">
-      IBRo
-    </span>
-    <a class="press text-[15px] font-medium hover:opacity-100" style="color: var(--paper-on-navy);" href="#verbund">Firmenverbund</a>
-    <a class="press text-[15px] font-medium" style="color: var(--paper-on-navy);" href="#funk">Funk</a>
-    <a class="press text-[15px] font-medium" style="color: var(--paper-on-navy);" href="#service">Service</a>
-    <a class="press hidden sm:inline text-[15px] font-medium" style="color: var(--paper-on-navy);" href="#versand">Versandservice</a>
-    <a class="press text-[15px] font-medium" style="color: var(--paper-on-navy);" href="#standort">Kontakt</a>
-  </nav>
-</div>
+---
+import Container from "./Container.astro";
+
+const punkte = [
+  { href: "#verbund", label: "Firmenverbund" },
+  { href: "#holding", label: "Verwaltung" },
+  { href: "#funk", label: "Funk" },
+  { href: "#service", label: "Service" },
+  { href: "#versand", label: "Versandservice" },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50" data-nav>
+  {/* Weiche Kante statt Trennlinie — nur dort, wo die Navigation den
+      Inhalt tatsaechlich ueberlappt. */}
+  <div class="scroll-edge pointer-events-none absolute inset-x-0 top-0 h-28" aria-hidden="true">
+  </div>
+
+  <Container class="relative pt-3 sm:pt-4">
+    <div class="nav-surface glass flex items-center gap-3 rounded-full py-2 pr-2.5 pl-5">
+      <a
+        href="#top"
+        class="flex shrink-0 items-baseline gap-1.5 rounded-full py-1"
+        aria-label="IBRo Firmengruppe, zum Seitenanfang"
+        data-press
+      >
+        <span
+          class="text-[1.0625rem] font-semibold tracking-[-0.02em]"
+          style="font-family: var(--font-display);"
+        >
+          IBRo
+        </span>
+        <span class="hidden text-[0.8125rem] text-[var(--color-ink-faint)] sm:inline">
+          Firmengruppe
+        </span>
+      </a>
+
+      <nav aria-label="Hauptnavigation" class="hidden min-w-0 flex-1 lg:block">
+        <ul class="flex items-center justify-between px-3 xl:px-6">
+          {
+            punkte.map((punkt) => (
+              <li>
+                <a
+                  href={punkt.href}
+                  class="block rounded-full px-3 py-2 text-[0.875rem] tracking-[-0.006em] text-[var(--color-ink-muted)] transition-colors duration-150 hover:text-[var(--color-ink)]"
+                  data-press
+                >
+                  {punkt.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <a
+        href="tel:+4938204660"
+        class="shadow-brand ml-auto hidden shrink-0 items-center gap-2 rounded-full bg-[var(--color-brand-bright)] px-5 py-2 text-[0.875rem] font-semibold text-[var(--color-surface-deep)] lg:inline-flex"
+        data-press
+      >
+        038204 660
+      </a>
+
+      {/* ml-auto: auf schmalen Geraeten sind Navigation und Rufnummer
+          ausgeblendet, ohne das saesse der Knopf neben der Wortmarke. */}
+      <button
+        type="button"
+        id="nav-toggle"
+        class="ml-auto flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-ink)] lg:hidden"
+        aria-expanded="false"
+        aria-controls="nav-mobil"
+        data-press
+      >
+        <span class="sr-only">Menü öffnen</span>
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+          <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5"></path>
+        </svg>
+      </button>
+    </div>
+
+    {/* Ohne JavaScript bleibt das Menue offen und damit benutzbar — erst
+        das Skript klappt es zu. */}
+    <div id="nav-mobil" class="glass mt-2 rounded-3xl p-2 lg:hidden">
+      <ul>
+        {
+          punkte.map((punkt) => (
+            <li>
+              <a
+                href={punkt.href}
+                class="block rounded-2xl px-4 py-3 text-[0.9375rem] text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                data-nav-mobil-link
+                data-press
+              >
+                {punkt.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="p-1.5">
+          <a
+            href="tel:+4938204660"
+            class="block rounded-full bg-[var(--color-brand-bright)] px-4 py-3 text-center text-[0.9375rem] font-semibold text-[var(--color-surface-deep)]"
+            data-nav-mobil-link
+            data-press
+          >
+            Anrufen: 038204 660
+          </a>
+        </li>
+      </ul>
+    </div>
+  </Container>
+</header>
 
 <style>
-  nav a:hover {
-    color: var(--accent);
+  /* Der Knopf sitzt in einer Glasflaeche und soll zu ihr gehoeren, nicht
+     davor schweben — deshalb ein flacherer Schatten als sonst. */
+  .nav-surface :global(.shadow-brand) {
+    box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--color-brand-bright) 70%, transparent);
+  }
+
+  /* `.js` sitzt am <html> und damit ausserhalb dieser Komponente. Ohne
+     :global() haengt Astro die Scope-Kennung auch an diesen Teil des
+     Selektors — dann greift die Regel nie und das Menue stuende auf dem
+     Handy dauerhaft offen. */
+  :global(.js) #nav-mobil {
+    display: none;
+  }
+
+  :global(.js) #nav-mobil.is-open {
+    display: block;
   }
 </style>
+
+<script>
+  const kopf = document.querySelector<HTMLElement>("[data-nav]");
+  const schalter = document.querySelector<HTMLButtonElement>("#nav-toggle");
+  const menue = document.querySelector<HTMLElement>("#nav-mobil");
+
+  /* Die Flaeche wird dichter, sobald Inhalt darunter durchlaeuft. */
+  const beimScrollen = () => {
+    kopf?.classList.toggle("is-scrolled", window.scrollY > 8);
+  };
+  beimScrollen();
+  window.addEventListener("scroll", beimScrollen, { passive: true });
+
+  function setzeMenue(offen: boolean): void {
+    menue?.classList.toggle("is-open", offen);
+    schalter?.setAttribute("aria-expanded", String(offen));
+    const label = schalter?.querySelector(".sr-only");
+    if (label) label.textContent = offen ? "Menü schließen" : "Menü öffnen";
+  }
+
+  schalter?.addEventListener("click", () => {
+    setzeMenue(!menue?.classList.contains("is-open"));
+  });
+
+  /* Nach dem Sprung zum Abschnitt soll das Menue nicht offen stehen
+     bleiben und den Inhalt verdecken. */
+  document.querySelectorAll("[data-nav-mobil-link]").forEach((link) => {
+    link.addEventListener("click", () => setzeMenue(false));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setzeMenue(false);
+  });
+</script>

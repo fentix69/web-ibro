@@ -17,7 +17,8 @@ import Kontakt from "../components/Kontakt.astro";
 
   <Division
     id="holding"
-    bg="paper"
+    index="01"
+    bg="surface"
     kicker="Die Verwaltungsgesellschaft trägt die Firmengruppe seit 1990."
     name="IBRo Funk und Marketing GmbH"
     lead="Prozesskompetenz ist unsere Stärke. Unser Qualitätsmanagement wird gelebt — von der Geschäftsführung bis zu den Mitarbeitern in allen unseren Unternehmen. Wir setzen Ihre Qualitätsstandards für Sie um."
@@ -38,6 +39,8 @@ import Kontakt from "../components/Kontakt.astro";
       },
     ]}
   >
+    <Fragment slot="sparte">Verwaltungsgesellschaft</Fragment>
+
     <Fragment slot="icon">
       <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
         <circle cx="28" cy="28" r="9" stroke="currentColor" stroke-width="1.6"></circle>
@@ -57,8 +60,8 @@ import Kontakt from "../components/Kontakt.astro";
 
   <Division
     id="funk"
-    bg="tint"
-    reverse
+    index="02"
+    bg="muted"
     kicker="Tochtergesellschaft seit 2006, hervorgegangen aus dem Geschäftsbereich Funk von 1991."
     name="IBRo Funk GmbH"
     lead="Ihr regionaler Fachhändler für stationäre und mobile Kommunikationstechnik in Mecklenburg-Vorpommern — von der Planung über Vertrieb und Montage bis zur Reparatur."
@@ -76,6 +79,8 @@ import Kontakt from "../components/Kontakt.astro";
       },
     ]}
   >
+    <Fragment slot="sparte">Kommunikationstechnik</Fragment>
+
     <Fragment slot="icon">
       <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
         <line x1="28" y1="52" x2="28" y2="20" stroke="currentColor" stroke-width="1.6"></line>
@@ -88,7 +93,8 @@ import Kontakt from "../components/Kontakt.astro";
 
   <Division
     id="service"
-    bg="paper"
+    index="03"
+    bg="surface"
     kicker="Tochtergesellschaft seit 2006, hervorgegangen aus dem Geschäftsbereich Telefonmarketing von 1991."
     name="IBRo Service GmbH"
     lead="Ihr Draht zum Kunden: Communication-Center-Leistungen in allen Dialogdisziplinen, über Telefon, Fax, Mailing, Internet, E-Mail und soziale Netzwerke."
@@ -125,6 +131,8 @@ import Kontakt from "../components/Kontakt.astro";
       },
     ]}
   >
+    <Fragment slot="sparte">Communication-Center</Fragment>
+
     <Fragment slot="icon">
       <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
         <path d="M14 28a14 14 0 0 1 28 0v10a4 4 0 0 1-4 4h-3v-12h7" stroke="currentColor" stroke-width="1.6" fill="none"></path>
@@ -135,8 +143,8 @@ import Kontakt from "../components/Kontakt.astro";
 
   <Division
     id="versand"
-    bg="tint"
-    reverse
+    index="04"
+    bg="muted"
     kicker="Seit über 30 Jahren Logistik- und Fulfillment-Dienstleister mit eigenem Logistikzentrum."
     name="IBRo Versandservice GmbH"
     lead="In gepflegten Hochregallagern lagert Ihre Ware trocken, sauber und lichtgeschützt. Wir übernehmen Bestell-, Reklamations- und Retourenbearbeitung und lösen auf Wunsch Zahlungsüberwachung und Inkassoverfahren aus."
@@ -158,6 +166,8 @@ import Kontakt from "../components/Kontakt.astro";
       },
     ]}
   >
+    <Fragment slot="sparte">Logistik und Fulfillment</Fragment>
+
     <Fragment slot="icon">
       <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
         <rect x="6" y="30" width="18" height="18" stroke="currentColor" stroke-width="1.6"></rect>
@@ -171,19 +181,55 @@ import Kontakt from "../components/Kontakt.astro";
 </BaseLayout>
 
 <script>
-  // Apple-Design: ein einziger orchestrierter Reveal je Sektion, respektiert prefers-reduced-motion
-  // ueber die CSS-Regel in global.css; hier nur das Ein-/Ausblenden beim Scrollen.
-  const sections = document.querySelectorAll<HTMLElement>(".reveal");
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      }
-    },
-    { threshold: 0.15 }
+  /*
+   * Einblenden beim Scrollen.
+   *
+   * Die Deckkraft liegt an den einzelnen Elementen, nie am Abschnitt:
+   * ein Vorfahr mit einer Deckkraft zwischen 0 und 1 macht eine eigene
+   * Composite-Ebene auf, und dann filtert `backdrop-filter` nur noch
+   * innerhalb dieser Ebene — die Glasflaechen saehen flach aus.
+   *
+   * Die Staffelung laeuft je Abschnitt, damit die Elemente eines
+   * Abschnitts als eine Bewegung erscheinen und nicht einzeln eintrudeln.
+   */
+  const wenigerBewegung = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const elemente = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-reveal-item]"),
   );
-  sections.forEach((section) => observer.observe(section));
+
+  /* Ohne IntersectionObserver gaebe es niemanden, der die Elemente je
+     sichtbar schaltet — dann lieber sofort alles zeigen. Dasselbe gilt,
+     wenn weniger Bewegung gewuenscht ist. */
+  if (wenigerBewegung.matches || !("IntersectionObserver" in window)) {
+    elemente.forEach((element) => element.classList.add("is-revealed"));
+  } else {
+    /* Abschnittsweise gruppieren, damit die Verzoegerung innerhalb eines
+       Abschnitts zaehlt und nicht ueber die ganze Seite hinweg. */
+    const beobachter = new IntersectionObserver(
+      (eintraege) => {
+        const sichtbar = eintraege.filter((eintrag) => eintrag.isIntersecting);
+
+        const proAbschnitt = new Map<Element, Element[]>();
+        for (const eintrag of sichtbar) {
+          const abschnitt = eintrag.target.closest("section") ?? document.body;
+          const liste = proAbschnitt.get(abschnitt) ?? [];
+          liste.push(eintrag.target);
+          proAbschnitt.set(abschnitt, liste);
+        }
+
+        for (const liste of proAbschnitt.values()) {
+          liste.forEach((ziel, position) => {
+            /* Gedeckelt: bei vielen Karten wartet man sonst auf die letzte. */
+            const verzoegerung = Math.min(position * 60, 360);
+            window.setTimeout(() => ziel.classList.add("is-revealed"), verzoegerung);
+            beobachter.unobserve(ziel);
+          });
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    elemente.forEach((element) => beobachter.observe(element));
+  }
 </script>

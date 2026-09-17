@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Schriften selbst gehostet, kein CDN — Vorgabe aus CLAUDE.md. */
 @import "@fontsource/space-grotesk/500.css";
 @import "@fontsource/space-grotesk/600.css";
 @import "@fontsource/space-grotesk/700.css";
@@ -7,113 +8,427 @@
 @import "@fontsource/public-sans/500.css";
 @import "@fontsource/public-sans/600.css";
 
-:root {
-  --paper: #f6f4ef;
-  --paper-tint: #efeadd;
-  --ink: #1b2430;
-  --muted: #5b6570;
-  --line: #d9d2c0;
-  --navy: #16202b;
-  --navy-soft: #1e2c38;
-  --navy-line: #2c3945;
-  --paper-on-navy: #f1ecdf;
-  --muted-on-navy: #b7c0c6;
-  --faint-on-navy: #6e7b84;
-  --accent: #d69a2d;
-  --accent-deep: #b67f1e;
-
+/* --------------------------------------------------------------------------
+   Design-Tokens
+   Aufbau nach dem hellen DzB-Haus-Stil (siehe web-fondaco), aber mit der
+   eigenen Akzentfarbe dieses Projekts.
+   -------------------------------------------------------------------------- */
+@theme {
   --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-body: "Public Sans", system-ui, sans-serif;
+  --font-sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
 
-  color-scheme: light;
-  font: 100%/1.6 var(--font-body);
-}
+  /* Flaechen */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f5f7;
+  /* Dunkle Flaeche bleibt das IBRo-Navy statt eines neutralen Schwarz —
+     daran haengt der Wiedererkennungswert der Seite. */
+  --color-surface-deep: #16202b;
+  --color-surface-deep-soft: #1e2c38;
 
-* {
-  box-sizing: border-box;
-}
+  /* Text */
+  --color-ink: #1d1d1f;
+  --color-ink-muted: #56565a;
+  --color-ink-faint: #6e6e73;
+  --color-hairline: #d9d9de;
 
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-}
+  /* Akzent — Messing-Amber.
+     Zwei Werte mit klarer Aufgabenteilung, weil der helle Ton als Text
+     durchfaellt: #d69a2d kommt auf Weiss nur auf 2,4:1.
+     --color-brand        #8f6212  5,35:1 auf Weiss, 4,92:1 auf #f5f5f7 — AA fuer Text
+     --color-brand-bright #d69a2d  nur Flaechen, Linien, Haken; als Text
+                                   ausschliesslich auf Navy (6,68:1)
+     Der Knopf traegt Navy auf hellem Amber: ebenfalls 6,68:1. */
+  --color-brand: #8f6212;
+  --color-brand-strong: #7d5610;
+  --color-brand-bright: #d69a2d;
+  --color-brand-soft: #fbf4e6;
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Apple-Design: Feedback sofort beim Antippen, nicht erst beim Loslassen */
-.press {
-  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
-}
-.press:active {
-  transform: scale(0.97);
-}
-
-/* Große Überschriften: enge Laufweite, straffe Zeilenhöhe */
-.display {
-  font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  /* Bewegung. Nichts hier ist gestisch, deshalb reichen Kurven —
+     Federn braeuchte erst, was ein Finger direkt anfasst. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-quick: 140ms;
+  --duration-base: 320ms;
 }
 
-/* Fließtext: neutrale Laufweite, großzügigere Zeilenhöhe */
-.body-copy {
-  font-family: var(--font-body);
-  line-height: 1.65;
-  letter-spacing: 0;
-}
+/* --------------------------------------------------------------------------
+   Basis
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
 
-.hairline-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  columns: 2;
-  column-gap: 40px;
-}
-.hairline-list li {
-  break-inside: avoid;
-  padding: 10px 0;
-  border-top: 1px solid var(--line);
-  font-size: 1rem;
-  line-height: 1.45;
-}
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    line-height: 1.55;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* Liquid-Glass-Navigation */
-.glass-nav {
-  background: rgba(22, 32, 43, 0.86);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 
-/* Ein einziger orchestrierter Reveal beim Scrollen der Sektionen —
-   kein fade-slide-up auf jeder Karte einzeln. */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 520ms cubic-bezier(0.2, 0, 0, 1), transform 520ms cubic-bezier(0.2, 0, 0, 1);
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+  p {
+    text-wrap: pretty;
+  }
 
-@media (max-width: 860px) {
-  .hairline-list {
-    columns: 1;
+  ::selection {
+    background-color: var(--color-brand);
+    color: #ffffff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
+/* --------------------------------------------------------------------------
+   Typografie
+   Tracking und Leading haengen an der Groesse: grosse Schrift braucht
+   negatives Tracking und enges Leading, Fliesstext neutrales Tracking und
+   offenes Leading. Ein fester Wert waere ueberall dort falsch, wo er nicht
+   gemessen wurde.
+   -------------------------------------------------------------------------- */
+@layer components {
+  .t-display {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.2rem + 2.6vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.032em;
+    text-wrap: balance;
+    /* Keine Silbentrennung in Seitenkoepfen: das deutsche Woerterbuch
+       zerlegt „Kommunikationstechnik" sonst mitten im Wort. */
+    hyphens: none;
+    overflow-wrap: break-word;
+  }
+
+  .t-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.25rem + 1.9vw, 2.6rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.028em;
+    text-wrap: balance;
+    hyphens: none;
+  }
+
+  .t-h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.016em;
+  }
+
+  .t-lead {
+    font-size: clamp(1.0625rem, 1rem + 0.45vw, 1.3125rem);
+    line-height: 1.5;
+    letter-spacing: -0.006em;
+    color: var(--color-ink-muted);
+  }
+
+  .t-body {
+    line-height: 1.65;
+    letter-spacing: 0;
+    color: var(--color-ink-muted);
+  }
+
+  /* Kleine Versalien brauchen positives Tracking, sonst kleben sie. */
+  .t-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Tabellenziffern fuer Nummerierung und Eckdaten — sonst tanzen die
+     Zahlen in der Spalte. */
+  .t-numeral {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* ------------------------------------------------------------------
+     Materialien
+     Die Glasflaeche ist ein Material, kein Farbwert: Blur plus eine helle
+     Oberkante, damit sie Licht faengt. Nie zwei helle Glasflaechen
+     uebereinander — die Lesbarkeit bricht zusammen.
+     ------------------------------------------------------------------ */
+  .glass {
+    background-color: color-mix(in srgb, var(--color-surface) 65%, transparent);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
+    box-shadow:
+      0 1px 0 0 color-mix(in srgb, #ffffff 65%, transparent) inset,
+      0 8px 28px -12px color-mix(in srgb, var(--color-ink) 22%, transparent);
+  }
+
+  /* Groessere Flaechen lesen sich dicker: mehr Blur, tieferer Schatten. */
+  .glass-thick {
+    -webkit-backdrop-filter: blur(36px) saturate(190%);
+    backdrop-filter: blur(36px) saturate(190%);
+    box-shadow:
+      0 1px 0 0 color-mix(in srgb, #ffffff 70%, transparent) inset,
+      0 24px 60px -24px color-mix(in srgb, var(--color-ink) 32%, transparent);
+  }
+
+  /* Dunkles Pendant fuer die Abschnitte auf Navy. */
+  .glass-dark {
+    background-color: color-mix(in srgb, #ffffff 8%, transparent);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid color-mix(in srgb, #ffffff 14%, transparent);
+    box-shadow:
+      0 1px 0 0 color-mix(in srgb, #ffffff 12%, transparent) inset,
+      0 24px 60px -28px rgb(0 0 0 / 0.55);
+  }
+
+  /* Ohne Blur traegt nur die Deckkraft — dann decken die Flaechen. */
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass,
+    .glass-thick {
+      background-color: color-mix(in srgb, var(--color-surface) 97%, transparent);
+    }
+    .glass-dark {
+      background-color: color-mix(in srgb, #ffffff 12%, transparent);
+    }
+  }
+
+  /* Weiche Kante statt 1px-Linie dort, wo die schwebende Navigation den
+     Inhalt ueberlappt. */
+  .scroll-edge {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-surface) 92%, transparent),
+      transparent
+    );
+    mask-image: linear-gradient(to bottom, #000 40%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent);
+  }
+
+  /* Duenne Trennlinie, die zu den Raendern hin auslaeuft. */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--color-hairline) 12%,
+      var(--color-hairline) 88%,
+      transparent
+    );
+  }
+
+  /* Farbiger Knopf: Schatten in der Markenfarbe statt in Grau — das liegt
+     naeher an dem, was ein farbiges Objekt tatsaechlich wirft. */
+  .shadow-brand {
+    box-shadow: 0 8px 22px -10px color-mix(in srgb, var(--color-brand-bright) 75%, transparent);
+    transition: box-shadow var(--duration-base) var(--ease-out-soft);
+  }
+
+  @media (hover: hover) {
+    .shadow-brand:hover {
+      box-shadow: 0 12px 28px -10px color-mix(in srgb, var(--color-brand-bright) 85%, transparent);
+    }
+  }
+
+  /* Zurueckhaltendes Anheben bei Mauskontakt. Bewusst klein: die Karte
+     soll antworten, nicht springen. */
+  .lift {
+    transition:
+      transform 220ms var(--ease-out-soft),
+      box-shadow 220ms var(--ease-out-soft),
+      border-color 220ms var(--ease-out-soft);
+  }
+
+  @media (hover: hover) {
+    .lift:hover {
+      transform: translateY(-3px);
+    }
+    .glass.lift:hover {
+      box-shadow:
+        0 1px 0 0 color-mix(in srgb, #ffffff 70%, transparent) inset,
+        0 16px 36px -16px color-mix(in srgb, var(--color-ink) 28%, transparent);
+    }
+    .glass-dark.lift:hover {
+      box-shadow:
+        0 1px 0 0 color-mix(in srgb, #ffffff 18%, transparent) inset,
+        0 28px 64px -26px rgb(0 0 0 / 0.65);
+      border-color: color-mix(in srgb, var(--color-brand-bright) 40%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lift:hover {
+      transform: none;
+    }
+  }
+
+  /* Leistungslisten in den Karten. Der Haken ersetzt den Aufzaehlungspunkt. */
+  .feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .feature-list > li {
+    position: relative;
+    padding: 0.7rem 0 0.7rem 1.65rem;
+    border-top: 1px solid var(--color-hairline);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+  }
+  /* Jede Zeile traegt dieselbe Oberlinie — auch die erste. In der
+     zweispaltigen Variante begaenne die zweite Spalte sonst auf einer
+     anderen Hoehe als die erste, weil `:first-child` dort nicht greift. */
+  .feature-list > li::before {
+    content: "";
+    position: absolute;
+    left: 0.15rem;
+    top: 1.32em;
+    width: 0.5rem;
+    height: 0.28rem;
+    border-left: 1.6px solid var(--color-brand-bright);
+    border-bottom: 1.6px solid var(--color-brand-bright);
+    transform: translateY(-50%) rotate(-45deg);
+  }
+
+  /* Rueckmeldung beim Antippen, nicht erst beim Loslassen. */
+  [data-press] {
+    transition: transform var(--duration-quick) var(--ease-out-soft);
+  }
+  [data-press]:active {
+    transform: scale(0.97);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-press] {
+      transition: none;
+    }
+    [data-press]:active {
+      transform: none;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reveal und Navigationszustand
+   Die Startwerte haengen an `.js`: ohne JavaScript ist der Inhalt sofort
+   sichtbar statt dauerhaft unsichtbar.
+
+   Wichtig: die Deckkraft wird an den einzelnen Elementen animiert, nie an
+   einem Abschnitt, der eine Glasflaeche enthaelt. Eine Deckkraft zwischen
+   0 und 1 macht eine eigene Composite-Ebene auf, und dann filtert
+   backdrop-filter nur noch innerhalb dieser Ebene — die Karte sieht flach
+   aus, in Chromium teils dauerhaft.
+   -------------------------------------------------------------------------- */
+@layer components {
+  .js [data-reveal-item] {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    transition:
+      opacity 420ms var(--ease-out-soft),
+      transform 420ms var(--ease-out-soft);
+  }
+
+  .js [data-reveal-item].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Die Navigationsflaeche wird dichter, sobald Inhalt darunter
+     durchlaeuft — sie materialisiert, statt umzuschalten. */
+  [data-nav] .nav-surface {
+    transition:
+      background-color var(--duration-base) var(--ease-out-soft),
+      box-shadow var(--duration-base) var(--ease-out-soft),
+      backdrop-filter var(--duration-base) var(--ease-out-soft);
+  }
+
+  [data-nav].is-scrolled .nav-surface {
+    background-color: color-mix(in srgb, var(--color-surface) 82%, transparent);
+    -webkit-backdrop-filter: blur(32px) saturate(190%);
+    backdrop-filter: blur(32px) saturate(190%);
+    box-shadow:
+      0 1px 0 0 color-mix(in srgb, #ffffff 70%, transparent) inset,
+      0 16px 40px -20px color-mix(in srgb, var(--color-ink) 34%, transparent);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Zugaenglichkeit — drei unabhaengige Signale
+   -------------------------------------------------------------------------- */
+
+/* Weniger Bewegung heisst nicht kein Feedback, sondern sanfteres Feedback:
+   Ueberblenden statt Verschieben, kein Ueberschwingen. */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
-    transition: opacity 200ms ease;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal-item] {
+    opacity: 1 !important;
     transform: none !important;
   }
-  .press {
-    transition: none;
+}
+
+/* Weniger Transparenz: Flaechen werden deckend, der Blur faellt weg. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-thick {
+    background-color: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: var(--color-hairline);
+  }
+
+  .glass-dark {
+    background-color: var(--color-surface-deep-soft);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  [data-nav].is-scrolled .nav-surface {
+    background-color: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Mehr Kontrast: klare, kontrastierende Rahmen statt zarter Kanten. */
+@media (prefers-contrast: more) {
+  .glass,
+  .glass-thick {
+    background-color: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: var(--color-ink);
+  }
+
+  .glass-dark {
+    background-color: var(--color-surface-deep);
+    border-color: #ffffff;
+  }
+
+  .t-body,
+  .t-lead {
+    color: var(--color-ink);
   }
 }

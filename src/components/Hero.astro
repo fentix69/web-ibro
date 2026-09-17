@@ -1,62 +1,192 @@
-<section style="background: var(--navy);" class="px-6 py-24 md:py-28">
-  <div class="mx-auto grid max-w-[1160px] items-center gap-14 md:grid-cols-2">
-    <div>
-      <p class="mb-4 text-[17px] font-semibold" style="color: var(--accent);">
-        Vier Unternehmen. Ein Verbund. Seit 1990 in Mecklenburg-Vorpommern.
-      </p>
-      <h1 class="display mb-6 text-[38px] md:text-[56px]" style="color: var(--paper-on-navy);">
-        Kommunikation, Kundenkontakt und Logistik unter einem Dach.
-      </h1>
-      <p class="body-copy mb-8 max-w-[540px] text-[18px]" style="color: var(--muted-on-navy);">
-        Als mittelständischer Firmenverbund reagieren wir schnell und unbürokratisch auf
-        individuelle Wünsche &mdash; und sind gleichzeitig leistungsfähig genug für umfangreiche
-        Produktpaletten und komplexe Projekte. Unsere Stärke ist unser Verbund.
-      </p>
-      <div class="flex flex-wrap gap-3">
-        <a
-          href="#verbund"
-          class="press rounded-full px-6 py-3 text-[15px] font-semibold"
-          style="background: var(--accent); color: var(--navy);"
+---
+import Container from "./Container.astro";
+
+const gesellschaften = [
+  { href: "#holding", name: "Funk und Marketing", rolle: "Verwaltungsgesellschaft" },
+  { href: "#funk", name: "Funk", rolle: "Kommunikationstechnik" },
+  { href: "#service", name: "Service", rolle: "Communication-Center" },
+  { href: "#versand", name: "Versandservice", rolle: "Logistik und Fulfillment" },
+];
+---
+
+<section id="top" class="relative isolate overflow-hidden">
+  {/* Ohne Struktur im Hintergrund waere die Glaskarte unsichtbar: es gaebe
+      nichts, was gebrochen werden koennte. Diese Schicht wird nie
+      angeklickt und traegt keine Bedeutung. */}
+  <div class="hero-grund" aria-hidden="true"></div>
+
+  <Container class="relative z-10 pt-32 pb-16 sm:pt-40 sm:pb-24">
+    <div
+      class="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16"
+    >
+      <div>
+        <p
+          class="t-eyebrow mb-6 flex items-start gap-3 text-[var(--color-ink-faint)]"
+          data-reveal-item
         >
-          Die vier Unternehmen
-        </a>
-        <a
-          href="#standort"
-          class="press rounded-full border px-6 py-3 text-[15px] font-medium"
-          style="border-color: var(--navy-line); color: var(--paper-on-navy);"
-        >
-          Kontakt in Roggentin
-        </a>
+          <span
+            class="mt-[0.42em] inline-block h-px w-8 shrink-0 bg-[var(--color-brand-bright)]"
+            aria-hidden="true"></span>
+          Seit 1990 in Mecklenburg-Vorpommern
+        </p>
+
+        <h1 class="t-display max-w-[20ch]" data-reveal-item>
+          Kommunikation, Kundenkontakt und Logistik unter einem Dach.
+        </h1>
+
+        <p class="t-lead mt-7 max-w-[52ch] sm:mt-8" data-reveal-item>
+          Als mittelständischer Firmenverbund reagieren wir schnell und unbürokratisch auf
+          individuelle Wünsche &mdash; und sind gleichzeitig leistungsfähig genug für
+          umfangreiche Produktpaletten und komplexe Projekte.
+        </p>
+
+        <div class="mt-9 flex flex-wrap items-center gap-3" data-reveal-item>
+          <a
+            href="#verbund"
+            class="shadow-brand inline-flex items-center gap-2 rounded-full bg-[var(--color-brand-bright)] px-6 py-3 text-[0.9375rem] font-semibold text-[var(--color-surface-deep)]"
+            data-press
+          >
+            Die vier Unternehmen
+          </a>
+          <a
+            href="#standort"
+            class="inline-flex items-center gap-2 rounded-full border border-[var(--color-hairline)] bg-[var(--color-surface)] px-6 py-3 text-[0.9375rem] font-medium text-[var(--color-ink)] transition-colors duration-150 hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+            data-press
+          >
+            Kontakt in Roggentin
+          </a>
+        </div>
+      </div>
+
+      {/* Ohne `data-reveal-item`, und das mit Absicht: die Karte lebt von
+          `backdrop-filter`. Sobald ein Vorfahr eine Deckkraft zwischen 0
+          und 1 hat, macht er eine eigene Ebene auf, und der Blur filtert
+          nur noch innerhalb dieser Ebene — die Karte sieht flach aus.
+          Chromium behaelt die Ebene nach der Einblendung teils bei. Sie
+          steht ohnehin oben im Bild und braucht kein Auftauchen. */}
+      <div class="lg:pt-1">
+        <div class="glass glass-thick rounded-3xl p-2">
+          <p
+            class="t-eyebrow px-4 pt-4 pb-3 text-[var(--color-ink-faint)]"
+          >
+            Der Verbund
+          </p>
+
+          <ul>
+            {
+              gesellschaften.map((gesellschaft, index) => (
+                <li>
+                  <a
+                    href={gesellschaft.href}
+                    class="verbund-zeile flex items-center gap-4 rounded-2xl px-4 py-3.5"
+                    data-press
+                  >
+                    <span
+                      class="t-numeral w-6 shrink-0 text-[0.8125rem] font-medium text-[var(--color-ink-faint)]"
+                      aria-hidden="true"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <span class="min-w-0 flex-1">
+                      <span class="t-h3 block text-[1.0625rem]">IBRo {gesellschaft.name}</span>
+                      <span class="mt-0.5 block text-[0.8125rem] text-[var(--color-ink-faint)]">
+                        {gesellschaft.rolle}
+                      </span>
+                    </span>
+
+                    <span class="pfeil shrink-0 text-[var(--color-ink-faint)]" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path
+                          d="M6 3.5 10.5 8 6 12.5"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       </div>
     </div>
-
-    <svg
-      viewBox="0 0 480 360"
-      class="w-full"
-      role="img"
-      aria-label="Schema des IBRo-Firmenverbunds: eine zentrale Verwaltungsgesellschaft mit drei Tochtergesellschaften"
-    >
-      <g fill="none" stroke="var(--navy-line)" stroke-width="1.5">
-        <line x1="240" y1="150" x2="105" y2="285"></line>
-        <line x1="240" y1="150" x2="240" y2="300"></line>
-        <line x1="240" y1="150" x2="375" y2="285"></line>
-      </g>
-      <circle cx="240" cy="150" r="66" fill="var(--navy-soft)" stroke="var(--accent)" stroke-width="2"></circle>
-      <text x="240" y="140" text-anchor="middle" fill="var(--paper-on-navy)" font-family="var(--font-display)" font-size="13" font-weight="600">IBRo Funk und</text>
-      <text x="240" y="158" text-anchor="middle" fill="var(--paper-on-navy)" font-family="var(--font-display)" font-size="13" font-weight="600">Marketing GmbH</text>
-      <text x="240" y="176" text-anchor="middle" fill="var(--faint-on-navy)" font-family="var(--font-body)" font-size="11">Verwaltungsgesellschaft</text>
-
-      <circle cx="105" cy="300" r="44" fill="var(--navy-soft)" stroke="var(--navy-line)" stroke-width="1.5"></circle>
-      <text x="105" y="297" text-anchor="middle" fill="var(--paper-on-navy)" font-family="var(--font-display)" font-size="12" font-weight="600">Funk</text>
-      <text x="105" y="312" text-anchor="middle" fill="var(--faint-on-navy)" font-family="var(--font-body)" font-size="10">GmbH</text>
-
-      <circle cx="240" cy="315" r="44" fill="var(--navy-soft)" stroke="var(--navy-line)" stroke-width="1.5"></circle>
-      <text x="240" y="312" text-anchor="middle" fill="var(--paper-on-navy)" font-family="var(--font-display)" font-size="12" font-weight="600">Service</text>
-      <text x="240" y="327" text-anchor="middle" fill="var(--faint-on-navy)" font-family="var(--font-body)" font-size="10">GmbH</text>
-
-      <circle cx="375" cy="300" r="44" fill="var(--navy-soft)" stroke="var(--navy-line)" stroke-width="1.5"></circle>
-      <text x="375" y="293" text-anchor="middle" fill="var(--paper-on-navy)" font-family="var(--font-display)" font-size="12" font-weight="600">Versand-</text>
-      <text x="375" y="308" text-anchor="middle" fill="var(--paper-on-navy)" font-family="var(--font-display)" font-size="12" font-weight="600">service</text>
-    </svg>
-  </div>
+  </Container>
 </section>
+
+<style>
+  /* Zwei weiche Farbfelder und ein feines Raster. Der Verlauf laeuft nach
+     unten aus, damit der naechste Abschnitt ohne Kante anschliesst. */
+  .hero-grund {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      /* Laeuft nach unten in die weisse Folgeflaeche aus — sonst steht
+         zwischen Hero und Firmenverbund eine sichtbare Kante. */
+      linear-gradient(to bottom, transparent 62%, var(--color-surface)),
+      radial-gradient(
+        42rem 28rem at 78% 8%,
+        color-mix(in srgb, var(--color-brand-bright) 20%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        38rem 30rem at 8% 42%,
+        color-mix(in srgb, var(--color-surface-deep) 9%, transparent),
+        transparent 72%
+      ),
+      var(--color-surface-muted);
+  }
+
+  .hero-grund::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--color-ink) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-ink) 6%, transparent) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 80% 65% at 50% 35%, #000 25%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 35%, #000 25%, transparent 75%);
+  }
+
+  .verbund-zeile {
+    transition:
+      background-color 200ms var(--ease-out-soft),
+      color 200ms var(--ease-out-soft);
+  }
+
+  .pfeil {
+    transition: transform 240ms var(--ease-out-soft), color 200ms linear;
+  }
+
+  @media (hover: hover) {
+    .verbund-zeile:hover {
+      background-color: color-mix(in srgb, #ffffff 70%, transparent);
+    }
+    .verbund-zeile:hover .pfeil {
+      transform: translateX(3px);
+      color: var(--color-brand);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .verbund-zeile,
+    .pfeil {
+      transition: none;
+    }
+    .verbund-zeile:hover .pfeil {
+      transform: none;
+    }
+  }
+
+  /* Ohne Blur traegt nur die Deckkraft — dann deckt die Flaeche. */
+  @media (prefers-reduced-transparency: reduce) {
+    .hero-grund::after {
+      display: none;
+    }
+  }
+</style>
