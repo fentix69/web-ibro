@@ -46,22 +46,37 @@ Bewerber (Karriere).
 
 ## Design
 
-Apple-Ästhetik nach DzB-Hausstil, aber mit eigener Akzentfarbe für dieses
-Projekt (nicht das übliche Petrol), weil die Zielgruppe (Funktechnik +
-Logistik) ein eigenes Vokabular verdient:
+Apple-Ästhetik im hellen DzB-Hausstil, aufgebaut wie `web-fondaco`
+(gleiches Tokenschema, gleiche Materialien, gleiche Typo-Klassen), aber
+mit eigener Akzentfarbe für dieses Projekt.
 
-- Papierweiß `#F6F4EF` / getönt `#EFEADD` als Flächenwechsel zwischen den
-  vier Firmenabschnitten
-- Tinte `#1B2430`, gedämpft `#5B6570`, Haarlinie `#D9D2C0`
-- Dunkles Navy `#16202B` für Hero und Kontakt (Rahmen der Seite)
-- Signalfarbe (Messing-Amber) `#D69A2D`, Hover-Ton `#B67F1E`
-- Display: Space Grotesk (600/700) — Fließtext: Public Sans (400/500/600)
-- Leitmotiv: ein Knoten-Diagramm (Verwaltungsgesellschaft + drei
-  Tochtergesellschaften) im Hero, kleine Strichgrafiken je Sparte statt
-  generischer Icon-Kacheln
-- Bewegung nach `/apple-design`: Sofort-Feedback beim Antippen (`.press`),
-  ein einziger orchestrierter Scroll-Reveal je Sektion (`.reveal`, per
-  `IntersectionObserver`), `prefers-reduced-motion` respektiert
+- Flächen neutral nach Apple-Art: Weiß `#FFFFFF` / `#F5F5F7` im Wechsel
+  zwischen den Abschnitten. Das frühere warme Papierweiß ist entfallen
+- Dunkle Fläche bleibt das IBRo-Navy `#16202B` (Kontakt) — daran hängt der
+  Wiedererkennungswert gegenüber den übrigen DzB-Projekten
+- Tinte `#1D1D1F`, gedämpft `#56565A`, zurückgenommen `#6E6E73`,
+  Haarlinie `#D9D9DE`
+- Akzent Messing-Amber, **zwei Werte mit klarer Aufgabenteilung**:
+  `--color-brand` `#8F6212` für Text (5,35:1 auf Weiß, 4,92:1 auf
+  `#F5F5F7`), `--color-brand-bright` `#D69A2D` nur für Flächen, Linien und
+  Haken. Der helle Ton kommt als Text auf Weiß nur auf 2,4:1 und ist dort
+  unzulässig; auf Navy trägt er (6,68:1)
+- Display: Space Grotesk (600) — Fließtext: Public Sans (400/500/600).
+  Größen über `.t-display`, `.t-h2`, `.t-h3`, `.t-lead`, `.t-body`,
+  `.t-eyebrow`, `.t-numeral`; Tracking und Leading sind größenabhängig
+- Materialien: `.glass` (hell), `.glass-thick` (große Flächen lesen sich
+  dicker), `.glass-dark` (auf Navy), jeweils mit heller Oberkante und
+  `@supports`-Rückfall ohne Blur
+- Kein Knoten-Diagramm mehr. Der Hero trägt stattdessen eine Glaskarte mit
+  den vier Gesellschaften als nummerierte Zeilen. Die kleinen
+  Strichgrafiken je Sparte bleiben, jetzt in einer Glaskachel
+- Bewegung nach `/apple-design`: Sofort-Feedback beim Antippen
+  (`[data-press]`), Einblenden je Abschnitt gestaffelt über
+  `[data-reveal-item]` und `IntersectionObserver`. Keine Bewegungs-
+  bibliothek — nichts auf dieser Seite ist gestisch, deshalb genügen
+  CSS-Kurven
+- Drei Bedienhilfen-Signale getrennt behandelt: `prefers-reduced-motion`,
+  `prefers-reduced-transparency`, `prefers-contrast`
 
 ## Seitenstruktur
 
@@ -72,12 +87,21 @@ eigene Referenzen-/Karriere-Seite) später ergänzen.
 
 ## Komponentenstruktur
 
-- `src/layouts/BaseLayout.astro` — Head, Meta, JSON-LD (`ProfessionalService`)
-- `src/components/Nav.astro` — schwebende Pill-Navigation mit Liquid-Glass-Effekt
-- `src/components/Hero.astro` — Einstieg mit Knoten-Diagramm
-- `src/components/Verbund.astro` — Fakten-Leiste + Schnellnavigation
+- `src/layouts/BaseLayout.astro` — Head, Meta, JSON-LD
+  (`ProfessionalService`), setzt die Klasse `js` am `<html>`
+- `src/components/Container.astro` — einheitliche Seitenbreite und Ränder
+- `src/components/SectionHeading.astro` — Eyebrow + `h2` + Lead, auch für
+  dunklen Grund (`onDark`)
+- `src/components/Nav.astro` — schwebende Pill-Navigation, weiche
+  Scroll-Kante statt Trennlinie, Mobilmenü
+- `src/components/Hero.astro` — Einstieg mit Glaskarte „Der Verbund"
+- `src/components/FactStrip.astro` — Eckdaten als **eine** durchgehende
+  Glasfläche mit Trennlinien
+- `src/components/Verbund.astro` — Abschnittskopf + Eckdaten
 - `src/components/Division.astro` — wiederverwendbar für alle vier Firmen
-  (Props: `id`, `bg`, `reverse`, `kicker`, `name`, `lead`, `extra`, `groups`)
+  (Props: `id`, `bg` (`surface` | `muted`), `index`, `kicker`, `name`,
+  `lead`, `extra`, `groups`; Slots: `icon`, `sparte`). Die Leistungen
+  stehen in Glaskarten, eine je Gruppe
 - `src/components/Kontakt.astro` — Adresse, Telefon, Footer
 - `src/pages/robots.txt.ts` — erzeugt die `robots.txt`; im Entwurfs-Build
   Sperre, im Produktions-Build Freigabe plus Sitemap-Verweis
@@ -118,6 +142,18 @@ npm run deploy:draft # Entwurf auf workers.dev veröffentlichen
 - Bestehende Dateien zuerst prüfen, nie ohne Hinweis überschreiben
 - Neue Inhalte für die vier Firmenabschnitte immer über `Division.astro`
   als Props einpflegen, nicht als eigene Ad-hoc-Markup-Blöcke
+- **Nie eine Deckkraft zwischen 0 und 1 auf einen Vorfahren einer
+  Glasfläche legen.** Das macht eine eigene Composite-Ebene auf, und
+  `backdrop-filter` filtert dann nur noch innerhalb dieser Ebene — die
+  Karte sieht flach aus, in Chromium teils dauerhaft. Deshalb hängt das
+  Einblenden an den einzelnen Elementen (`[data-reveal-item]`), nie am
+  Abschnitt, und die Glaskarten in Hero und Kontakt blenden gar nicht ein
+- Nie zwei helle Glasflächen übereinander — die Lesbarkeit bricht
+  zusammen. Deshalb ist der Eckdaten-Streifen eine Fläche mit
+  Trennlinien und nicht drei Karten
+- In Astro-Komponenten-Styles Selektoren auf `.js` (steht am `<html>`)
+  immer als `:global(.js)` schreiben. Ohne das hängt Astro die
+  Scope-Kennung auch an diesen Teil und die Regel greift nie
 - Schriften bleiben selbst gehostet (`@fontsource`) — kein Google-Fonts-CDN
 - `server`-Zeile in `astro.config.mjs` muss **innerhalb** von
   `defineConfig({...})` stehen, sonst bricht der Build

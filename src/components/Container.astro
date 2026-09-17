@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Tag = "div" | "section" | "header" | "footer" | "main" | "nav";
+
+/*
+ * Uebrige Attribute werden durchgereicht — sonst fallen id, aria-* und
+ * data-* still unter den Tisch, und Sprungmarken wie #funk zeigen ins Leere.
+ */
+type Props = HTMLAttributes<"div"> & { as?: Tag };
+
+const { as: Element = "div", class: className = "", ...rest } = Astro.props;
+---
+
+<Element class:list={["mx-auto w-full max-w-6xl px-6 sm:px-8", className]} {...rest}>
+  <slot />
+</Element>

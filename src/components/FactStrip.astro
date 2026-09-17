@@ -1,0 +1,66 @@
+---
+export type Fact = {
+  value: string;
+  label: string;
+};
+
+interface Props {
+  facts: Fact[];
+  class?: string;
+}
+
+const { facts, class: className = "" } = Astro.props;
+
+/*
+ * Eckdaten als eine durchgehende Glasflaeche.
+ *
+ * Die Trennlinien sind Raender an den Feldern, nicht Luecken im Raster:
+ * fuer die Lueckenvariante braeuchte jedes Feld eine eigene Flaeche, und
+ * zwei helle Glasflaechen uebereinander sind nicht mehr lesbar.
+ */
+---
+
+<dl
+  class:list={[
+    "streifen glass grid w-full overflow-hidden rounded-[1.5rem]",
+    /* Auch auf dem Handy nebeneinander — untereinander frisst der
+       Streifen sonst eine halbe Bildschirmhoehe. */
+    "grid-cols-3",
+    className,
+  ]}
+>
+  {
+    facts.map((fact) => (
+      <div class="px-2 py-5 text-center sm:px-5 sm:py-6">
+        <span
+          class="mx-auto mb-2.5 block h-0.5 w-5 bg-[var(--color-brand-bright)] sm:w-6"
+          aria-hidden="true"
+        />
+        <dt class="t-numeral text-[clamp(1.5rem,1rem+1.8vw,2.375rem)] leading-none font-semibold tracking-[-0.035em]">
+          {fact.value}
+        </dt>
+        {/* text-balance verteilt mehrzeilige Beschriftungen gleichmaessig,
+            statt die letzte Zeile mit einem Wort stehen zu lassen. */}
+        <dd class="mt-3 text-[0.8125rem] leading-[1.45] text-balance hyphens-none text-[var(--color-ink-muted)] sm:text-[0.875rem]">
+          {fact.label}
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .streifen > * + * {
+    border-left: 1px solid color-mix(in srgb, var(--color-ink) 11%, transparent);
+  }
+
+  /* Die globale Regel fuer `.glass` greift hier nicht, weil die
+     Komponentenregel spezifischer ist — also beides selbst abdecken. */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .streifen {
+      background-color: var(--color-surface);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+</style>

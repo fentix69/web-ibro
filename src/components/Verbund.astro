@@ -1,49 +1,42 @@
-<section id="verbund" class="reveal px-6 py-24" style="background: var(--paper);">
-  <div class="mx-auto grid max-w-[1160px] gap-16 md:grid-cols-[0.85fr_1.15fr]">
-    <h2 class="display text-[28px] md:text-[38px]" style="color: var(--ink);">
-      Unsere Stärke ist unser Firmenverbund.
-    </h2>
-    <div>
-      <p class="body-copy mb-9 max-w-[620px] text-[17px]" style="color: #3a434c;">
-        Wir haben unseren Sitz in Mecklenburg-Vorpommern am Stadtrand der Hansestadt Rostock und
-        agieren von hier aus bereits seit 1990 erfolgreich. Über die Jahre sind aus einem
-        Unternehmen vier eigenständige Gesellschaften geworden &mdash; jede mit eigenem
-        Schwerpunkt, gemeinsam getragen von derselben Verwaltungsgesellschaft.
-      </p>
-      <dl class="grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div>
-          <dt class="display text-[34px]" style="color: var(--ink);">1990</dt>
-          <dd class="mt-1.5 text-[15px]" style="color: var(--muted);">
-            Gründung in Mecklenburg-Vorpommern, am Stadtrand von Rostock
-          </dd>
-        </div>
-        <div>
-          <dt class="display text-[34px]" style="color: var(--ink);">2006</dt>
-          <dd class="mt-1.5 text-[15px]" style="color: var(--muted);">
-            Ausgliederung der Geschäftsbereiche Funk und Telefonmarketing in eigene Tochtergesellschaften
-          </dd>
-        </div>
-        <div>
-          <dt class="display text-[34px]" style="color: var(--ink);">4</dt>
-          <dd class="mt-1.5 text-[15px]" style="color: var(--muted);">
-            eigenständige Unternehmen unter dem Dach der IBRo Firmengruppe
-          </dd>
-        </div>
-      </dl>
-    </div>
-  </div>
+---
+import Container from "./Container.astro";
+import SectionHeading from "./SectionHeading.astro";
+import FactStrip from "./FactStrip.astro";
 
-  <div class="mx-auto mt-14 flex max-w-[1160px] flex-wrap gap-3">
-    <a href="#holding" class="press rounded-full border px-5 py-2.5 text-[14px] font-medium" style="border-color: var(--line); color: var(--ink);">Verwaltungsgesellschaft</a>
-    <a href="#funk" class="press rounded-full border px-5 py-2.5 text-[14px] font-medium" style="border-color: var(--line); color: var(--ink);">Funk GmbH</a>
-    <a href="#service" class="press rounded-full border px-5 py-2.5 text-[14px] font-medium" style="border-color: var(--line); color: var(--ink);">Service GmbH</a>
-    <a href="#versand" class="press rounded-full border px-5 py-2.5 text-[14px] font-medium" style="border-color: var(--line); color: var(--ink);">Versandservice GmbH</a>
-  </div>
+const eckdaten = [
+  { value: "1990", label: "Gründung am Stadtrand von Rostock" },
+  { value: "2006", label: "Ausgliederung in eigene Tochtergesellschaften" },
+  { value: "4", label: "eigenständige Unternehmen unter einem Dach" },
+];
+---
+
+<section id="verbund" class="relative isolate scroll-mt-28 overflow-hidden py-20 sm:py-28">
+  <div class="verbund-grund" aria-hidden="true"></div>
+
+  <Container class="relative z-10">
+    <SectionHeading
+      eyebrow="Firmenverbund"
+      title="Unsere Stärke ist unser Firmenverbund."
+      lead="Über die Jahre sind aus einem Unternehmen vier eigenständige Gesellschaften geworden — jede mit eigenem Schwerpunkt, gemeinsam getragen von derselben Verwaltungsgesellschaft."
+    />
+
+    <div class="mt-12 max-w-[46rem]" data-reveal-item>
+      <FactStrip facts={eckdaten} />
+    </div>
+  </Container>
 </section>
 
 <style>
-  a:hover {
-    border-color: var(--accent) !important;
-    color: var(--accent-deep) !important;
+  .verbund-grund {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(
+        36rem 24rem at 15% 0%,
+        color-mix(in srgb, var(--color-brand-bright) 12%, transparent),
+        transparent 70%
+      ),
+      var(--color-surface);
   }
 </style>

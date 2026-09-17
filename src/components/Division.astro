@@ -1,4 +1,6 @@
 ---
+import Container from "./Container.astro";
+
 interface LeistungsGruppe {
   title?: string;
   items: string[];
@@ -6,8 +8,9 @@ interface LeistungsGruppe {
 
 interface Props {
   id: string;
-  bg?: "paper" | "tint";
-  reverse?: boolean;
+  /** Flaechenwechsel zwischen den Abschnitten. */
+  bg?: "surface" | "muted";
+  index: string;
   kicker: string;
   name: string;
   lead: string;
@@ -15,37 +18,103 @@ interface Props {
   groups: LeistungsGruppe[];
 }
 
-const { id, bg = "paper", reverse = false, kicker, name, lead, extra, groups } = Astro.props;
-const background = bg === "tint" ? "var(--paper-tint)" : "var(--paper)";
+const { id, bg = "surface", index, kicker, name, lead, extra, groups } = Astro.props;
+
+/*
+ * Bei nur einer Gruppe steht die Liste in einer breiten Karte und laeuft
+ * dort zweispaltig; bei mehreren bekommt jede Gruppe eine eigene Karte.
+ * So bleibt die Kartenhoehe in beiden Faellen im Rahmen.
+ */
+const einzeln = groups.length === 1;
 ---
 
-<section id={id} class="reveal px-6 py-20 md:py-24" style={`background: ${background};`}>
-  <div class={`mx-auto grid max-w-[1160px] gap-14 md:grid-cols-2 ${reverse ? "md:[&>*:first-child]:order-2" : ""}`}>
-    <div>
-      <div class="mb-5" style="color: var(--ink);">
+<section
+  id={id}
+  class:list={[
+    "relative isolate scroll-mt-28 overflow-hidden py-20 sm:py-28",
+    bg === "muted" ? "bg-[var(--color-surface-muted)]" : "bg-[var(--color-surface)]",
+  ]}
+>
+  <Container class="relative z-10">
+    <div class="max-w-2xl">
+      {/* Strichgrafik der Sparte in einer Glaskachel — kein generisches
+          Icon-Raster, sondern ein Zeichen je Gesellschaft. */}
+      <div
+        class="sparte-kachel glass mb-7 flex h-14 w-14 items-center justify-center rounded-2xl text-[var(--color-ink)]"
+        data-reveal-item
+      >
         <slot name="icon" />
       </div>
-      <p class="mb-2 text-[15px]" style="color: var(--muted);">{kicker}</p>
-      <h3 class="display mb-5 text-[28px] md:text-[34px]" style="color: var(--ink);">{name}</h3>
-      <p class="body-copy mb-4 max-w-[520px] text-[17px]" style="color: #3a434c;">{lead}</p>
-      {extra && (
-        <p class="body-copy max-w-[520px] text-[16px]" style="color: var(--muted);">{extra}</p>
-      )}
+
+      <p class="t-eyebrow mb-5 flex items-start gap-3 text-[var(--color-ink-faint)]" data-reveal-item>
+        <span class="t-numeral shrink-0 text-[0.8125rem] font-semibold text-[var(--color-brand)]">
+          {index}
+        </span>
+        <span class="mt-[0.42em] inline-block h-px w-8 shrink-0 bg-[var(--color-brand-bright)]" aria-hidden="true"></span>
+        <slot name="sparte" />
+      </p>
+
+      <h2 class="t-h2 break-words" data-reveal-item>{name}</h2>
+
+      <p class="mt-4 text-[0.9375rem] text-[var(--color-ink-faint)]" data-reveal-item>
+        {kicker}
+      </p>
+
+      <p class="t-lead mt-6" data-reveal-item>{lead}</p>
+
+      {
+        extra && (
+          <p class="t-body mt-4 max-w-[54ch]" data-reveal-item>
+            {extra}
+          </p>
+        )
+      }
     </div>
 
-    <div class="pt-1 md:pt-[78px]">
-      {groups.map((group) => (
-        <div class="mb-6 last:mb-0">
-          {group.title && (
-            <p class="mb-3 text-[15px] font-semibold" style="color: var(--ink);">{group.title}</p>
-          )}
-          <ul class="hairline-list">
-            {group.items.map((item) => (
-              <li set:html={item} />
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div
+      class:list={[
+        "mt-12 grid gap-4",
+        !einzeln && "sm:grid-cols-2 lg:grid-cols-3",
+      ]}
+    >
+      {
+        groups.map((group) => (
+          <article class="glass lift rounded-3xl p-6 sm:p-7" data-reveal-item>
+            {group.title && (
+              <h3 class="t-h3 mb-5 flex items-start gap-3">
+                <span
+                  class="mt-[0.55em] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-brand-bright)]"
+                  aria-hidden="true"
+                />
+                <span class="min-w-0">{group.title}</span>
+              </h3>
+            )}
+
+            <ul class:list={["feature-list", einzeln && "sm:columns-2 sm:gap-x-10"]}>
+              {group.items.map((item) => (
+                <li set:html={item} />
+              ))}
+            </ul>
+          </article>
+        ))
+      }
     </div>
-  </div>
+  </Container>
 </section>
+
+<style>
+  /* Die Grafiken kommen in ihrer Originalgroesse (56 px) aus dem Slot und
+     wuerden die Kachel sonst randlos ausfuellen. Scoped Styles greifen
+     nicht in Slot-Inhalte, deshalb :global(). */
+  .sparte-kachel :global(svg) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  /* In der zweispaltigen Variante darf kein Eintrag ueber den Spaltenrand
+     brechen, sonst steht der Haken allein am Spaltenfuss. */
+  .feature-list > li {
+    break-inside: avoid;
+  }
+
+</style>
